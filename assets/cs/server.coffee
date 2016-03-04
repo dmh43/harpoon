@@ -1,19 +1,22 @@
 express = require 'express'
 fs = require 'fs'
-
 app = express()
+#server = require('http').Server(app)
+server = app.listen(3000)
+io = require('socket.io').listen(server)
+path = require 'path'
 
-i = -1
+tabs = JSON.parse(fs.readFileSync(__dirname+ "/../json/tabs.json")).tabs
 
-tabs = JSON.parse(fs.readFileSync("../json/tabs.json")).tabs
+io.on('connection', (socket) ->
+  console.log('Connected!')
+  socket.on('get tab', (tabTitle) ->
+
+    socket.emit('here is tab', tabs[0])
+    console.log('sent a tab')))
 
 parseTab = (tab) ->
   return tab.title + "\n" + tab.notes
 
-app.get('/', (req, res) -> res.send('Hello World!'))
-app.get('/next', (req, res) -> res.send((->
-  i = (i+1)%tabs.length
-  return parseTab(tabs[i]))()
-))
-
-app.listen(3000, -> console.log('Listening bby'))
+app.use(express.static("./"))
+app.listen(8000, -> console.log('Listening bby'))

@@ -4,16 +4,16 @@
   "description": "Source for harpoon. Website to share and view harmonica tabs.",
   "main": "bundle.js",
   "dependencies": {
+    "bufferutil": "^1.2.1",
     "coffeeify": "^2.0.1",
     "express": "^4.13.4",
     "fs": "0.0.2",
-    "http": "0.0.0",
     "jquery": "^2.2.1",
     "react": "^0.14.7",
     "react-burger-menu": "^1.5.3",
     "react-dom": "^0.14.7",
-    "react-sidebar": "^2.1.1",
-    "socket.io": "^1.4.5"
+    "socket.io": "^1.4.5",
+    "utf-8-validate": "^1.2.1"
   },
   "devDependencies": {
     "watchify": "^3.7.0"
