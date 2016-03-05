@@ -59,7 +59,7 @@ TabSection = React.createClass({
     className: "tabSection",
     style: Styles.tabSec},
     React.createElement('h1', {}, "Tab Viewer"),
-    React.createElement(Tab, {title: "This is my tab!", notes: "1 2 3"})))
+    React.createElement(Tab, {title: @props.tab.title, notes: @props.tab.notes})))
   }
 )
 
@@ -78,8 +78,8 @@ TabListItem = React.createClass({
 TabList = React.createClass({
   displayName: 'TabList',
   render: ->
-    tabItems = @props.tabs.map((tab) ->
-      return React.createElement(TabListItem, {title: tab.title}))
+    tabItems = @props.titles.map((title) ->
+      return React.createElement(TabListItem, {title: title}))
     return (React.createElement('div',
       {className: "tabList"},
       React.createElement('h1', {}, "All Tabs"),
@@ -88,20 +88,24 @@ TabList = React.createClass({
 Page = React.createClass({
   displayName: 'Page',
   showSettings: (e) -> e.preventDefault(),
+  getInitialState: ->
+    return {tab: {title:'khiri', notes: '12'}, titles: ["khiri", "ballout"]}
+  componentDidMount: () ->
+    that = this
+    socket.emit('get tab names')
+    socket.on('here are titles', (titles) ->
+      that.setState({titles: titles}))
   render: ->
-    return (React.createElement('div', {className: "page"},
+    return (React.createElement('div', {
+      className: "page"},
       React.createElement(Menu, {
         className: "menu",
         styles: Styles.burger
         },
-        React.createElement(TabList, {tabs:@props.tabs})),
-      React.createElement(TabSection)
+        React.createElement(TabList, {titles: @state.titles})),
+      React.createElement(TabSection, {tab: @state.tab})
     ))
   })
 
-tabs = [{title: "Blues scale", notes: "-2 -3' 4 -4' -4 -5 6"},
-  {title: "Major scale",
-  notes: "4 -4 5 -5 6 -6 -7 7"}]
-
-ReactDOM.render(React.createElement(Page, {tabs:tabs}),
+ReactDOM.render(React.createElement(Page),
   document.getElementById('content'))
