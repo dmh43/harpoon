@@ -68,18 +68,17 @@ TabListItem = React.createClass({
   render: ->
     React.createElement('li', {
       className: "menu-item"
-      onClick: =>
-        socket.emit('get tab', @props.title)
-        socket.on('here is tab', (tab) ->
-          console.log(tab))
+      onClick: @props.onClick
     },
     @props.title)})
 
 TabList = React.createClass({
   displayName: 'TabList',
   render: ->
-    tabItems = @props.titles.map((title) ->
-      return React.createElement(TabListItem, {title: title}))
+    tabItems = @props.titles.map((title) =>
+      return React.createElement(TabListItem, {
+        title: title
+        onClick: @props.onTitleClick(title)}))
     return (React.createElement('div',
       {className: "tabList"},
       React.createElement('h1', {}, "All Tabs"),
@@ -102,8 +101,15 @@ Page = React.createClass({
         className: "menu",
         styles: Styles.burger
         },
-        React.createElement(TabList, {titles: @state.titles})),
-      React.createElement(TabSection, {tab: @state.tab})
+        React.createElement(TabList, {
+          titles: @state.titles
+          onTitleClick: (title) =>
+            return =>
+              socket.emit('get tab', title)
+              socket.on('here is tab', (tab) =>
+                console.log(tab)
+                @setState({tab:tab}))})),
+        React.createElement(TabSection, {tab: @state.tab})
     ))
   })
 
