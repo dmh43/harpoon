@@ -88,7 +88,10 @@ Page = React.createClass({
   displayName: 'Page',
   showSettings: (e) -> e.preventDefault(),
   getInitialState: ->
-    return {tab: {title:'khiri', notes: '12'}, titles: ["khiri", "ballout"]}
+    return {
+      tab: {title:'No Tab Selected', notes: 'Select a tab from the side bar to the left'}
+      titles: ["khiri", "ballout"]
+      menuOpen: false}
   componentDidMount: () ->
     that = this
     socket.emit('get tab names')
@@ -100,11 +103,13 @@ Page = React.createClass({
       React.createElement(Menu, {
         className: "menu",
         styles: Styles.burger
-        },
+        ref: (ref) => @Sidebar = ref
+        }
         React.createElement(TabList, {
           titles: @state.titles
           onTitleClick: (title) =>
             return =>
+              @Sidebar.setState({isOpen: false})
               socket.emit('get tab', title)
               socket.on('here is tab', (tab) =>
                 console.log(tab)
