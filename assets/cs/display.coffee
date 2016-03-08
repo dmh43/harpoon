@@ -78,6 +78,7 @@ TabList = React.createClass({
     tabItems = @props.titles.map((title) =>
       return React.createElement(TabListItem, {
         title: title
+        key: title
         onClick: @props.onTitleClick(title)}))
     return (React.createElement('div',
       {className: "tabList"},
@@ -92,11 +93,15 @@ Page = React.createClass({
       tab: {title:'No Tab Selected', notes: 'Select a tab from the side bar to the left'}
       titles: ["khiri", "ballout"]
       menuOpen: false}
-  componentDidMount: () ->
+  getTitles: ->
     that = this
     socket.emit('get tab names')
     socket.on('here are titles', (titles) ->
       that.setState({titles: titles}))
+    console.log(that.state.titles)
+  componentDidMount: () ->
+    @getTitles()
+    socket.on('tabs changed', => @getTitles())
   render: ->
     return (React.createElement('div', {
       className: "page"},
