@@ -13,6 +13,7 @@
     "react": "^0.14.7",
     "react-burger-menu": "^1.5.3",
     "react-dom": "^0.14.7",
+    "react-form-controlled": "^0.13.4",
     "socket.io": "^1.4.5",
     "utf-8-validate": "^1.2.1"
   },

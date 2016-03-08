@@ -24,20 +24,30 @@ getTabs = (operation) ->
     console.log('Got some tabs from DB')
     operation(rows))
 
+writeTab = (tab) ->
+  dbConn.query('INSERT INTO tabs SET ?', tab,
+    (err, res) ->
+      if err then throw err
+      console.log("Last tab ID:", res.insertId))
+
 io.on('connection', (socket) ->
   console.log('Connected!')
-  socket.on('tab submission', (e) ->
-    console.log('tab list changed!')
-    socket.emit('tabs changed'))
-  getTabs((rows) ->
-    socket.on('get tab', (tabTitle) ->
+  socket.on('get tab', (tabTitle) ->
+    getTabs((rows) ->
       socket.emit('here is tab',
         (tab for tab in rows when tab.title == tabTitle)[0])
-    console.log('sent a tab')))
-  getTabs((rows) ->
-    socket.on('get tab names', () ->
-      socket.emit('here are titles',
-        (tab.title for tab in rows)))))
+      console.log('sent a tab')))
+  socket.on('get tab names', () ->
+      console.log('sending titles')
+      getTabs((rows) ->
+        console.log(rows)
+        socket.emit('here are titles',
+          (tab.title for tab in rows))))
+  socket.on('tab submission', (tab) ->
+    writeTab(tab)
+    socket.emit('tabs changed')
+    console.log('got a new tab!'))
+  )
 
 app.use(express.static("./"))
 app.listen(8000, -> console.log('Listening bby'))

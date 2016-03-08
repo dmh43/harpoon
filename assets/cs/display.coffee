@@ -1,6 +1,7 @@
 React = require 'react'
 ReactDOM = require 'react-dom'
 Menu = (require 'react-burger-menu').slide
+Form = (require 'react-form-controlled').default
 $ = require 'jquery'
 io = require 'socket.io-client'
 socket = io()
@@ -41,6 +42,23 @@ Styles = {
     }
   },
   tabSec: {
+    position: "relative"
+    "marginLeft": "100px"
+  }
+  titleEntry: {
+    position: "relative"
+    "marginLeft": "100px"
+    "marginTop": "5rem"
+  }
+  notesEntry: {
+    position: "relative"
+    "marginLeft": "100px"
+    "marginTop": "0.5rem"
+    "marginBottom": "0.5rem"
+    "width": "300px"
+    "height": "100px"
+  }
+  form: {
     position: "relative"
     "marginLeft": "100px"
   }
@@ -102,7 +120,18 @@ Page = React.createClass({
   componentDidMount: () ->
     @getTitles()
     socket.on('tabs changed', => @getTitles())
+  handleFormChange: (state) -> @setState(state)
+  handleFormSubmit: (state) ->
+    tab = {title: state.titleEntry, notes: state.notesEntry}
+    console.log(tab)
+    socket.emit("tab submission", tab)
+    @setState({
+      titleEntry: ""
+      notesEntry: ""
+      tab: tab})
+    @getTitles()
   render: ->
+    that = this
     return (React.createElement('div', {
       className: "page"},
       React.createElement(Menu, {
@@ -119,7 +148,31 @@ Page = React.createClass({
               socket.on('here is tab', (tab) =>
                 console.log(tab)
                 @setState({tab:tab}))})),
-        React.createElement(TabSection, {tab: @state.tab})
+        React.createElement(TabSection, {tab: @state.tab}),
+        React.createElement(Form, {
+          style: Styles.form
+          value: @state
+          onChange: that.handleFormChange
+          onSubmit: that.handleFormSubmit},
+          React.createElement('div', {},
+            React.createElement('label', {},
+              React.createElement('input', {
+                style: Styles.titleEntry
+                type: 'text'
+                name: "titleEntry"
+                placeholder: "Tab Title"})))
+          React.createElement('div', {},
+            React.createElement('label', {},
+              React.createElement('input', {
+                style: Styles.notesEntry
+                type: 'text'
+                name: "notesEntry"
+                placeholder: "Enter a tab!"}))),
+          React.createElement('button', {
+            type: 'submit'
+            style: {
+              position: 'relative'
+              "marginLeft": "100px"}}, 'Submit'))
     ))
   })
 
