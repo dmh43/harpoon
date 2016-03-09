@@ -7,7 +7,9 @@ socket = io()
 {tab, tabsection, tablist, tablistitem} = require('./reactClasses.coffee').creators
 Styles = require('./reactClasses.coffee').Styles
 
-Page = React.createClass({
+{div, label, input, button} = React.DOM
+
+Page = React.createClass
   displayName: 'Page'
   showSettings: (e) -> e.preventDefault()
   getInitialState: ->
@@ -42,7 +44,6 @@ Page = React.createClass({
     @getTitles()
 
   render: ->
-    {div, label, input, button} = React.DOM
     that = this
     div
       className: 'page',
@@ -86,7 +87,6 @@ Page = React.createClass({
             position: 'relative'
             "marginLeft": "100px"
           'Submit'
-  })
 
 ReactDOM.render(React.createElement(Page),
   document.getElementById('content'))

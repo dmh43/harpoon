@@ -45,9 +45,12 @@ io.on('connection', (socket) ->
           (tab.title for tab in rows))))
   socket.on('tab submission', (tab) ->
     writeTab(tab)
-    socket.emit('tabs changed')
+    io.emit('tabs changed')
     console.log('got a new tab!'))
   )
 
 app.use(express.static("./"))
-app.listen(8000, -> console.log('Listening bby'))
+
+root = exports ? this
+root.getTabs = getTabs
+root.writeTab = writeTab
