@@ -88,22 +88,20 @@ TabListItem = React.createClass({
     },
     @props.title)})
 
-TabList = React.createClass({
+TabList = React.createClass
   displayName: 'TabList',
   render: ->
-    if @props.refs.search
-      filteredTitles = @props.titles.filter(@props.refs.search.filter().bind(this))
-      tabItems = filteredTitles.map((title) =>
-        return React.createElement(TabListItem, {
-          title: title
-          key: title
-          onClick: @props.onTitleClick(title)}))
-      return (React.createElement('div',
-        {className: "tabList"},
-        React.createElement('h1', {}, "All Tabs"),
-        React.createElement('ul', {id: "tabs"}, tabItems)))
-    else
-      return React.createElement('div', {}, "no data")})
+    filteredTitles = @props.titles.filter((title) =>
+      return title.toLowerCase().includes(@props.searchTerm.toLowerCase()))
+    tabItems = filteredTitles.map((title) =>
+      return React.createElement(TabListItem, {
+        title: title
+        key: title
+        onClick: @props.onTitleClick(title)}))
+    return (React.createElement('div',
+      {className: "tabList"},
+      React.createElement('h1', {}, "All Tabs"),
+      React.createElement('ul', {id: "tabs"}, tabItems)))
 
 creators = {
   tab: React.createFactory(Tab)

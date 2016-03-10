@@ -1,6 +1,6 @@
 React = require 'react'
 ReactDOM = require 'react-dom'
-Menu = React.createFactory (require 'react-burger-menu').bubble
+Menu = React.createFactory (require 'react-burger-menu').slide
 Form = React.createFactory (require 'react-form-controlled').default
 SearchInput = React.createFactory require('react-search-input')
 {tab, tabsection, tablist, tablistitem} = require('./reactClasses.coffee').creators
@@ -9,7 +9,7 @@ Styles = require('./reactClasses.coffee').Styles
 io = require 'socket.io-client'
 socket = io()
 
-{div, label, input, button} = React.DOM
+{div, label, input, button, textarea} = React.DOM
 
 Page = React.createClass
   displayName: 'Page'
@@ -22,7 +22,6 @@ Page = React.createClass
         title:'No Tab Selected'
         notes: 'Select a tab from the side bar to the left'
       titles: ["DEAD", "BEEF"]
-      menuOpen: false
       searchTerm: ''
     }
 
@@ -49,7 +48,7 @@ Page = React.createClass
       tab: tab})
     @getTitles()
 
-  searchUpdated: (term) -> @setState(searchTerm: term)
+  searchUpdated: (e) -> @setState(searchTerm: e.target.value)
 
   render: ->
     that = this
@@ -60,26 +59,19 @@ Page = React.createClass
         styles: Styles.burger
         ref: (ref) => @Sidebar = ref,
         div {},
-          SearchInput
-            ref: 'search'
+          input
             className: "search-input"
-            onChange: @searchUpdated,
-            button
-              onClick: =>
-                @refs.search.setState searchTerm: ''
-                @setState searchTerm: '',
-              "Clear"
-            tablist
-              titles: @state.titles
-              searchTerm: @state.searchTerm
-              refs: @refs
-              onTitleClick: (title) =>
-                return =>
-                  @Sidebar.setState(isOpen: false)
-                  socket.emit('get tab', title)
-                  socket.on('here is tab', (tab) =>
-                    console.log(tab)
-                    @setState(tab:tab))
+            onChange: @searchUpdated
+          tablist
+            titles: @state.titles
+            searchTerm: @state.searchTerm
+            onTitleClick: (title) =>
+              return =>
+                @Sidebar.setState(isOpen: false)
+                socket.emit('get tab', title)
+                socket.on('here is tab', (tab) =>
+                  console.log(tab)
+                  @setState(tab:tab))
       tabsection
         tab: @state.tab
       Form
@@ -96,7 +88,7 @@ Page = React.createClass
               placeholder: "Tab Title"
         div {},
           label {},
-            input
+            textarea
               style: Styles.notesEntry
               type: 'text'
               name: "notesEntry"
