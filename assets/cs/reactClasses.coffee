@@ -1,6 +1,7 @@
 React = require 'react'
 ReactDOM = require 'react-dom'
 $ = require 'jquery'
+
 root = exports ? this
 
 Styles = {
@@ -90,15 +91,19 @@ TabListItem = React.createClass({
 TabList = React.createClass({
   displayName: 'TabList',
   render: ->
-    tabItems = @props.titles.map((title) =>
-      return React.createElement(TabListItem, {
-        title: title
-        key: title
-        onClick: @props.onTitleClick(title)}))
-    return (React.createElement('div',
-      {className: "tabList"},
-      React.createElement('h1', {}, "All Tabs"),
-      React.createElement('ul', {id: "tabs"}, tabItems)))})
+    if @props.refs.search
+      filteredTitles = @props.titles.filter(@props.refs.search.filter().bind(this))
+      tabItems = filteredTitles.map((title) =>
+        return React.createElement(TabListItem, {
+          title: title
+          key: title
+          onClick: @props.onTitleClick(title)}))
+      return (React.createElement('div',
+        {className: "tabList"},
+        React.createElement('h1', {}, "All Tabs"),
+        React.createElement('ul', {id: "tabs"}, tabItems)))
+    else
+      return React.createElement('div', {}, "no data")})
 
 creators = {
   tab: React.createFactory(Tab)
