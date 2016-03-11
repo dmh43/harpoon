@@ -7,16 +7,16 @@ path = require 'path'
 mysql = require 'mysql'
 
 dbConn =mysql.createConnection({
-  host: "localhost"
-  user: "dany"
-  password: "7pqe5fa1"
-  database: "harpoon"})
+  host: 'localhost'
+  user: 'dany'
+  password: '7pqe5fa1'
+  database: 'harpoon'})
 
 dbConn.connect((err) ->
   if err
-    console.log("DB connection failed")
+    console.log('DB connection failed')
   else
-    console.log("DB connected!"))
+    console.log('DB connected!'))
 
 getTabs = (operation) ->
   dbConn.query('SELECT * FROM tabs', (err, rows) ->
@@ -28,7 +28,7 @@ writeTab = (tab) ->
   dbConn.query('INSERT INTO tabs SET ?', tab,
     (err, res) ->
       if err then throw err
-      console.log("Last tab ID:", res.insertId))
+      console.log('Last tab ID:', res.insertId))
 
 io.on('connection', (socket) ->
   console.log('Connected!')
@@ -49,7 +49,7 @@ io.on('connection', (socket) ->
     console.log('got a new tab!'))
   )
 
-app.use(express.static("./"))
+app.use(express.static('./'))
 
 root = exports ? this
 root.getTabs = getTabs

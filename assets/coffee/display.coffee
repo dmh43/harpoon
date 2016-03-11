@@ -2,9 +2,8 @@ React = require 'react'
 ReactDOM = require 'react-dom'
 Menu = React.createFactory (require 'react-burger-menu').slide
 Form = React.createFactory (require 'react-form-controlled').default
-SearchInput = React.createFactory require('react-search-input')
-{tab, tabsection, tablist, tablistitem} = require('./reactClasses.coffee').creators
-Styles = require('./reactClasses.coffee').Styles
+tabsection = React.createFactory require './components/tabsection'
+tablist = React.createFactory require './components/tablist'
 
 io = require 'socket.io-client'
 socket = io()
@@ -21,7 +20,7 @@ Page = React.createClass
       tab:
         title:'No Tab Selected'
         notes: 'Select a tab from the side bar to the left'
-      titles: ["DEAD", "BEEF"]
+      titles: ['DEAD', 'BEEF']
       searchTerm: ''
     }
 
@@ -41,10 +40,10 @@ Page = React.createClass
   handleFormSubmit: (state) ->
     tab = {title: state.titleEntry, notes: state.notesEntry}
     console.log(tab)
-    socket.emit("tab submission", tab)
+    socket.emit('tab submission', tab)
     @setState({
-      titleEntry: ""
-      notesEntry: ""
+      titleEntry: ''
+      notesEntry: ''
       tab: tab})
     @getTitles()
 
@@ -55,12 +54,11 @@ Page = React.createClass
     div
       className: 'page',
       Menu
-        className: "menu",
-        styles: Styles.burger
+        className: 'menu',
         ref: (ref) => @Sidebar = ref,
         div {},
           input
-            className: "search-input"
+            className: 'search-input'
             onChange: @searchUpdated
           tablist
             titles: @state.titles
@@ -75,29 +73,26 @@ Page = React.createClass
       tabsection
         tab: @state.tab
       Form
-        style: Styles.form
         value: @state
         onChange: that.handleFormChange
         onSubmit: that.handleFormSubmit,
         div {},
           label {},
             input
-              style: Styles.titleEntry
               type: 'text'
-              name: "titleEntry"
-              placeholder: "Tab Title"
+              name: 'titleEntry'
+              placeholder: 'Tab Title'
         div {},
           label {},
             textarea
-              style: Styles.notesEntry
               type: 'text'
-              name: "notesEntry"
-              placeholder: "Enter a tab!"
+              name: 'notesEntry'
+              placeholder: 'Enter a tab!'
         button
           type: 'submit'
           style:
             position: 'relative'
-            "marginLeft": "100px"
+            'marginLeft': '100px'
           'Submit'
 
 ReactDOM.render(React.createElement(Page),

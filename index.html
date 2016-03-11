@@ -1,14 +1,14 @@
 <!DOCTYPE HTML>
-<html lang="en">
+<html lang='en'>
 <head>
-  <meta charset="UTF-8">
+  <meta charset='UTF-8'>
   <title>Harpoon</title>
-  <link rel="stylesheet" href="./assets/css/normalize.css">
-  <link rel="stylesheet" href="./assets/css/main.css">
+  <link rel='stylesheet' href='./assets/css/normalize.css'>
+  <link rel='stylesheet' href='./assets/css/main.css'>
 </head>
 <body>
-  <div id="content" style="position:relative; padding:0 0 0 55px;"></div>
-  <script src="./bundle.js"></script>
+  <div id='content' style='position:relative; padding:0 0 0 55px;'></div>
+  <script src='./bundle.js'></script>
   <!--
   <script>
     $(function() {
@@ -16,10 +16,10 @@
       var containerEl = $('.visits');
 
       socket.on('visit', function(visit) {
-        var newItem = '<div class="visit">';
-        newItem += '<span class="date">' + moment().format('MMMM Do YYYY, HH:mm:ss') + '</span>';
-        newItem += '<span class="ip">' + visit.ip + '</span>';
-        newItem += '<span class="ua">' + visit.ua + '</span></div>';
+        var newItem = '<div class='visit'>';
+        newItem += '<span class='date'>' + moment().format('MMMM Do YYYY, HH:mm:ss') + '</span>';
+        newItem += '<span class='ip'>' + visit.ip + '</span>';
+        newItem += '<span class='ua'>' + visit.ua + '</span></div>';
         containerEl.append(newItem);
       });
     });

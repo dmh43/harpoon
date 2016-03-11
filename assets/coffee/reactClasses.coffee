@@ -40,50 +40,50 @@ Styles = {
     }
   },
   tabSec: {
-    position: "relative"
-    "marginLeft": "100px"
+    position: 'relative'
+    'marginLeft': '100px'
   }
   titleEntry: {
-    position: "relative"
-    "marginLeft": "100px"
-    "marginTop": "5rem"
+    position: 'relative'
+    'marginLeft': '100px'
+    'marginTop': '5rem'
   }
   notesEntry: {
-    position: "relative"
-    "marginLeft": "100px"
-    "marginTop": "0.5rem"
-    "marginBottom": "0.5rem"
-    "width": "300px"
-    "height": "100px"
+    position: 'relative'
+    'marginLeft': '100px'
+    'marginTop': '0.5rem'
+    'marginBottom': '0.5rem'
+    'width': '300px'
+    'height': '100px'
   }
   form: {
-    position: "relative"
-    "marginLeft": "100px"
+    position: 'relative'
+    'marginLeft': '100px'
   }
 }
 
 Tab = React.createClass({
   displayName: 'Tab',
   render: -> return (React.createElement('div',
-    {className: "tab"},
+    {className: 'tab'},
     React.createElement('h2', {}, @props.title),
-    React.createElement('div', {className: "notes"}, @props.notes)))})
+    React.createElement('div', {className: 'notes'}, @props.notes)))})
 
 TabSection = React.createClass({
   displayName: 'TabSection',
   render: -> return (React.createElement('div', {
-    className: "tabSection",
+    className: 'tabSection',
     style: Styles.tabSec},
-    React.createElement('h1', {}, "Tab Viewer"),
+    React.createElement('h1', {}, 'Tab Viewer'),
     React.createElement(Tab, {title: @props.tab.title, notes: @props.tab.notes})))
   }
 )
 
 TabListItem = React.createClass({
-  displayName: "TabListItem"
+  displayName: 'TabListItem'
   render: ->
     React.createElement('li', {
-      className: "menu-item"
+      className: 'menu-item'
       onClick: @props.onClick
     },
     @props.title)})
@@ -99,9 +99,9 @@ TabList = React.createClass
         key: title
         onClick: @props.onTitleClick(title)}))
     return (React.createElement('div',
-      {className: "tabList"},
-      React.createElement('h1', {}, "All Tabs"),
-      React.createElement('ul', {id: "tabs"}, tabItems)))
+      {className: 'tabList'},
+      React.createElement('h1', {}, 'All Tabs'),
+      React.createElement('ul', {id: 'tabs'}, tabItems)))
 
 creators = {
   tab: React.createFactory(Tab)

@@ -1,5 +1,5 @@
 {
-  "name": "harpoon",
+    "name": "harpoon",
   "version": "1.0.0",
   "description": "Source for harpoon. Website to share and view harmonica tabs.",
   "main": "bundle.js",

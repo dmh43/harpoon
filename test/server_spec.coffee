@@ -4,15 +4,15 @@ should = chai.should()
 getTabs = require('../assets/cs/server').getTabs
 writeTab = require('../assets/cs/server').writeTab
 
-blues_tab = {"title" : "Blues scale", "notes" : "-2 -3' 4 -4' -4 -5 6"}
+blues_tab = {'title' : 'Blues scale', 'notes' : "-2 -3' 4 -4' -4 -5 6"}
 
 describe 'db interface', ->
   before ->
     dbConn = mysql.createConnection
-      host: "localhost"
-      user: "tester"
-      password: "1234"
-      database: "test_db"
+      host: 'localhost'
+      user: 'tester'
+      password: '1234'
+      database: 'test_db'
     dbConn.connect((err) -> throw err)
 
   describe '#getTabs()', ->
