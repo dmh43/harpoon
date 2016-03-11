@@ -14,7 +14,6 @@ class TabList extends Component
         key: title
         onClick: @props.onTitleClick(title)
     return div className: "tabList",
-      h1 {}, "All Tabs"
       ul id: "tabs", tabItems
 
 module.exports = TabList

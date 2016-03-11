@@ -71,7 +71,7 @@ Page = React.createClass
                   console.log(tab)
                   @setState(tab:tab))
       tabsection
-        className: 'tabsection'
+        className: 'tabSection'
         tab: @state.tab
       Form
         className: 'form'
@@ -92,9 +92,6 @@ Page = React.createClass
               placeholder: 'Enter a tab!'
         button
           type: 'submit'
-          style:
-            position: 'relative'
-            'marginLeft': '100px'
           'Submit'
 
 ReactDOM.render(React.createElement(Page),
