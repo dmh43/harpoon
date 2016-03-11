@@ -71,8 +71,10 @@ Page = React.createClass
                   console.log(tab)
                   @setState(tab:tab))
       tabsection
+        className: 'tabsection'
         tab: @state.tab
       Form
+        className: 'form'
         value: @state
         onChange: that.handleFormChange
         onSubmit: that.handleFormSubmit,

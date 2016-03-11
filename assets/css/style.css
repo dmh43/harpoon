@@ -1,0 +1,159 @@
+body {
+  font-family: sans-serif;
+  color: #444;
+  background-color: #EEEEEE;
+}
+
+.page .tabsection {
+  line-height: 1.4;
+  font-size: 18px;
+}
+
+.form textarea{
+  margin-top: 0.5rem;
+  width: 100%;
+  min-width: 5rem;
+  max-width: 15rem;
+  height: 100%;
+  min-height: 3rem;
+  max-height: 10rem;
+}
+
+.form button {
+  margin-left: 0;
+}
+
+textarea{
+  color:#666;
+  font-size:14px;
+  -moz-border-radius: 8px; -webkit-border-radius: 8px;
+  margin:5px 0px 10px 0px;
+  padding:10px;
+  height:75px;
+  width:350px;
+  border:#999 1px solid;
+  font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  transition: all 0.25s ease-in-out;
+  -webkit-transition: all 0.25s ease-in-out;
+  -moz-transition: all 0.25s ease-in-out;
+  box-shadow: 0 0 5px rgba(81, 203, 238, 0);
+  -webkit-box-shadow: 0 0 5px rgba(81, 203, 238, 0);
+  -moz-box-shadow: 0 0 5px rgba(81, 203, 238, 0);
+}
+
+textarea:focus{
+  color:#000;
+  outline:none;
+  border:#35a5e5 1px solid;
+  font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+  -webkit-box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+  -moz-box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+}
+
+.form input {
+  color:#666;
+  font-size:14px;
+  -moz-border-radius: 8px; -webkit-border-radius: 8px;
+  margin:0px 0px 0px 0px;
+  padding:5px;
+  border:#999 1px solid;
+  font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  transition: all 0.25s ease-in-out;
+  -webkit-transition: all 0.25s ease-in-out;
+  -moz-transition: all 0.25s ease-in-out;
+  box-shadow: 0 0 2px rgba(81, 203, 238, 0);
+  -webkit-box-shadow: 0 0 2px rgba(81, 203, 238, 0);
+  -moz-box-shadow: 0 0 2px rgba(81, 203, 238, 0);
+}
+
+.form input:focus{
+  color:#000;
+  outline:none;
+  border:#35a5e5 1px solid;
+  font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  box-shadow: 0 0 2px rgba(81, 203, 238, 1);
+  -webkit-box-shadow: 0 0 2px rgba(81, 203, 238, 1);
+  -moz-box-shadow: 0 0 2px rgba(81, 203, 238, 1);
+}
+
+.search-input {
+  position: relative;
+  z-index: 2;
+  color:#666;
+  font-size:14px;
+  -moz-border-radius: 8px; -webkit-border-radius: 8px;
+  margin:0px 0px 0px 0px;
+  padding:5px;
+  border:#999 1px solid;
+  font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  transition: all 0.25s ease-in-out;
+  -webkit-transition: all 0.25s ease-in-out;
+  -moz-transition: all 0.25s ease-in-out;
+  box-shadow: 0 0 2px rgba(81, 203, 238, 0);
+  -webkit-box-shadow: 0 0 2px rgba(81, 203, 238, 0);
+  -moz-box-shadow: 0 0 2px rgba(81, 203, 238, 0);
+}
+
+.search-input:focus{
+  color:#000;
+  outline:none;
+  border:#35a5e5 1px solid;
+  font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  box-shadow: 0 0 2px rgba(81, 203, 238, 1);
+  -webkit-box-shadow: 0 0 2px rgba(81, 203, 238, 1);
+  -moz-box-shadow: 0 0 2px rgba(81, 203, 238, 1);
+}
+
+/* Position and sizing of burger button */
+.bm-burger-button {
+  position: fixed;
+  width: 36px;
+  height: 30px;
+  left: 15px;
+  top: 30px;
+}
+
+/* Color/shape of burger icon bars */
+.bm-burger-bars {
+  background: #373a47;
+}
+
+/* Position and sizing of clickable cross button */
+.bm-cross-button {
+  height: 24px;
+  width: 24px;
+  visibility: hidden;
+}
+
+/* Color/shape of close button cross */
+.bm-cross {
+  background: #bdc3c7;
+}
+
+.bm-menu-wrap {
+  margin-left: -63px;
+}
+
+/* General sidebar styles */
+.bm-menu {
+  background: #373a47;
+  padding: 1em 1em 0;
+  font-size: 1.15em;
+}
+
+/* Morph shape necessary with bubble or elastic */
+.bm-morph-shape {
+  fill: #373a47;
+}
+
+/* Wrapper for item list */
+.bm-item-list {
+  color: #b8b7ad;
+  padding: 0.8em;
+}
+
+/* Styling of overlay */
+.bm-overlay {
+  background: rgba(0, 0, 0, 0.3);
+}
