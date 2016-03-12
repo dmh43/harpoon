@@ -8,18 +8,22 @@ Form = React.createFactory (require 'react-form-controlled').default
 
 class Toolbar extends Component
 
-  getInitialState: ->
-    return {
+  constructor: ->
+    @state =
       username: '',
       password: ''
-    }
 
   handleFormChange: (state) -> @setState(state)
 
   handleFormSubmit: (state) ->
+    Auth.login(@state.username, @state.password)
+      .catch (err) ->
+        console.log("Error logging in", err)
     @setState(username: '', password: '')
 
   render: =>
+    if @props.isLoggedIn
+      return div className: 'toolbar', 'Hello user!'
     return div
       className: 'toolbar',
       Form

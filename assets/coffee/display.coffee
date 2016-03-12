@@ -27,6 +27,7 @@ Page = React.createClass
       searchTerm: ''
       notesEntry: ''
       titleEntry: ''
+      userData: {isLoggedIn: false}
     }
 
   componentDidMount: () ->
@@ -52,6 +53,7 @@ Page = React.createClass
       className: 'page',
       toolbar
         className: 'toolbar'
+        userData: @state.userData
       Menu
         className: 'menu',
         ref: (ref) => @Sidebar = ref,

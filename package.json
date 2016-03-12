@@ -1,5 +1,5 @@
 {
-    "name": "harpoon",
+  "name": "harpoon",
   "version": "1.0.0",
   "description": "Source for harpoon. Website to share and view harmonica tabs.",
   "main": "bundle.js",
@@ -10,6 +10,8 @@
     "fs": "0.0.2",
     "jquery": "^2.2.1",
     "mysql": "^2.10.2",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
     "react": "^0.14.7",
     "react-burger-menu": "^1.5.3",
     "react-dom": "^0.14.7",
