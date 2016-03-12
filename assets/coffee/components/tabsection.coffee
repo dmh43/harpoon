@@ -7,6 +7,7 @@ Tab = React.createFactory require './tab'
 class TabSection extends Component
   render: ->
     return div
+      ref: (ref) => @tabSection = ref
       className: "tabSection",
       h1 {}, "Tab Viewer"
       Tab

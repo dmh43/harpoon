@@ -6,7 +6,7 @@ class TabListItem extends Component
   render: ->
     return li
       className: "menu-item"
-      onClick: @props.onClick,
+      onClick: @props.onItemClick,
       @props.title
 
 module.exports = TabListItem

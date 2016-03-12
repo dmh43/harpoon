@@ -12,7 +12,7 @@ class TabList extends Component
       return TabListItem
         title: title
         key: title
-        onClick: @props.onTitleClick(title)
+        onItemClick: @props.onTitleClick(title)
     return div className: "tabList",
       ul id: "tabs", tabItems
 

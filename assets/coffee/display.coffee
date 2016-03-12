@@ -1,14 +1,17 @@
 React = require 'react'
 ReactDOM = require 'react-dom'
 Menu = React.createFactory (require 'react-burger-menu').slide
-Form = React.createFactory (require 'react-form-controlled').default
 tabsection = React.createFactory require './components/tabsection'
 tablist = React.createFactory require './components/tablist'
+toolbar = React.createFactory require './components/toolbar'
+tabinput = React.createFactory require './components/tabinput'
+
+{div, label, input, button, textarea} = React.DOM
 
 io = require 'socket.io-client'
 socket = io()
 
-{div, label, input, button, textarea} = React.DOM
+getTitles = require('./utility').getTitles
 
 Page = React.createClass
   displayName: 'Page'
@@ -22,37 +25,33 @@ Page = React.createClass
         notes: 'Select a tab from the side bar to the left'
       titles: ['DEAD', 'BEEF']
       searchTerm: ''
+      notesEntry: ''
+      titleEntry: ''
     }
 
-  getTitles: ->
-    that = this
-    socket.emit('get tab names')
-    socket.on('here are titles', (titles) ->
-      that.setState({titles: titles}))
-    console.log(that.state.titles)
-
   componentDidMount: () ->
-    @getTitles()
-    socket.on('tabs changed', => @getTitles())
-
-  handleFormChange: (state) -> @setState(state)
-
-  handleFormSubmit: (state) ->
-    tab = {title: state.titleEntry, notes: state.notesEntry}
-    console.log(tab)
-    socket.emit('tab submission', tab)
-    @setState({
-      titleEntry: ''
-      notesEntry: ''
-      tab: tab})
-    @getTitles()
+    getTitles(socket, (titles) => @setState(titles: titles))
+    socket.on('tabs changed', getTitles(socket, (titles) => @setState(titles: titles)))
 
   searchUpdated: (e) -> @setState(searchTerm: e.target.value)
 
+  setTab: (tab) -> @setState(tab: tab)
+
+  setTitles: (titles) -> @setState(titles: titles)
+
+  onTitleClick: (title) ->
+    return =>
+      @Sidebar.setState(isOpen: false)
+      socket.emit('get tab', title)
+      socket.on('here is tab', (tab) =>
+        console.log(tab)
+        @setState(tab:tab))
+
   render: ->
-    that = this
     div
       className: 'page',
+      toolbar
+        className: 'toolbar'
       Menu
         className: 'menu',
         ref: (ref) => @Sidebar = ref,
@@ -63,36 +62,17 @@ Page = React.createClass
           tablist
             titles: @state.titles
             searchTerm: @state.searchTerm
-            onTitleClick: (title) =>
-              return =>
-                @Sidebar.setState(isOpen: false)
-                socket.emit('get tab', title)
-                socket.on('here is tab', (tab) =>
-                  console.log(tab)
-                  @setState(tab:tab))
-      tabsection
-        className: 'tabSection'
-        tab: @state.tab
-      Form
-        className: 'form'
-        value: @state
-        onChange: that.handleFormChange
-        onSubmit: that.handleFormSubmit,
-        div {},
-          label {},
-            input
-              type: 'text'
-              name: 'titleEntry'
-              placeholder: 'Tab Title'
-        div {},
-          label {},
-            textarea
-              type: 'text'
-              name: 'notesEntry'
-              placeholder: 'Enter a tab!'
-        button
-          type: 'submit'
-          'Submit'
+            onTitleClick: @onTitleClick
+      div
+        className: 'view'
+        tabsection
+          className: 'tabSection'
+          tab: @state.tab
+        tabinput
+          className: 'tabInput'
+          socket: socket
+          setTab: @setTab
+          setTitles: @setTitles
 
 ReactDOM.render(React.createElement(Page),
   document.getElementById('content'))

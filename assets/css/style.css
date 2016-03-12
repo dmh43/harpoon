@@ -4,15 +4,32 @@ body {
   background-color: #EEEEEE;
 }
 
-.page .tabSection, .form{
+.view{
   margin-left: 8rem;
   margin-top: 3rem;
+  padding:0 0 0 55px;
 }
 
 .page .tabSection {
   line-height: 1.4;
   font-size: 18px;
   padding-bottom: 2rem;
+}
+
+.toolbar {
+  position: absolute;
+  margin-top: 10px;
+  right: 0;
+  top: 0;
+}
+
+.toolbar input[type="text"] {
+  margin-right: 5px;
+}
+
+.toolbar button {
+  margin-left: 5px;
+  margin-right: 5px;
 }
 
 .form textarea{
@@ -123,8 +140,8 @@ textarea:focus{
   position: fixed;
   width: 36px;
   height: 30px;
-  left: 36px;
-  top: 30px;
+  left: 5rem;
+  top: 4rem;
 }
 
 /* Color/shape of burger icon bars */
@@ -145,7 +162,7 @@ textarea:focus{
 }
 
 .bm-menu-wrap {
-  margin-left: -63px;
+  margin-left: -10px;
 }
 
 /* General sidebar styles */
@@ -184,7 +201,7 @@ li:last-child {
 
 li {
   font: 300 18px Helvetica, Verdana, sans-serif;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.46);
+  /* border-bottom: 1px solid rgba(255, 255, 255, 0.46); */
   text-decoration: none;
   color: rgba(255, 255, 255, 0.46);
   display: block;
@@ -198,9 +215,9 @@ li {
 }
 
 li:hover {
-  font-weight: bold;
   color: rgba(0, 0, 0, 0.46);
   background: grey;
-  padding-top: 15px;
-  padding-bottom: 15px;
+  /* font-weight: bold; */
+  /* padding-top: 15px; */
+  /* padding-bottom: 15px; */
 }
