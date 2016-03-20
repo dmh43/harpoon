@@ -50,6 +50,9 @@ newUser = (username, password) ->
           if err then throw err
           console.log('Last user ID: ', res.insertId))
 
+buildJWT = (username) ->
+  jwt.sign {username: username}, secret
+
 io.on 'connection', (socket) ->
   console.log('Connected!')
   socket.on('get tab', (tabTitle) ->
@@ -67,15 +70,20 @@ io.on 'connection', (socket) ->
     writeTab(tab)
     io.emit('tabs changed')
     console.log('got a new tab!'))
-  socket.on 'get secret', () -> socket.emit 'here is secret', secret
   socket.on 'new user', (user) -> newUser(user.username, user.password)
-  socket.on 'user login', (token) -> jwt.verify token, secret,
-    (err, payload) ->
-      lookupUser(payload.username, payload.password, (err, rows) ->
-        if rows.length != 0
-          socket.emit 'authenticated', "user's data"
-        else
-          socket.emit 'denied', 'no user credentials matched')
+  socket.on 'user login', (user) ->
+    lookupUser(user.username, user.password, (err, rows) ->
+      if rows.length != 0
+        socket.emit 'authenticated',
+          {username: user.username, token: buildJWT(user.username)}
+      else
+        socket.emit 'denied', 'no user credentials matched')
+  socket.on 'get favorites', (token) -> jwt.verify token, secret,
+    (err, payload) -> dbConn.query 'SELECT favorites FROM users where username=?',
+      payload.username, (err, rows) ->
+        socket.emit 'here are favorites', rows[0].favorites
+        console.log(rows)
+        console.log(err)
 
 app.use(express.static('./'))
 

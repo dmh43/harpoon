@@ -19,10 +19,10 @@ class Toolbar extends Component
     @props.loginUser(user)
 
   render: =>
-    if @props.userData.username
+    if @props.username
       return div className: 'toolbar',
         span className: 'welcome-message',
-          "Welcome, " + @props.userData.username + "!"
+          "Welcome, " + @props.username + "!"
         button
           onClick: @props.logoffUser
           'Logoff'

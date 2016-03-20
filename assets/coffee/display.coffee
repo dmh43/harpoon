@@ -10,8 +10,6 @@ view = React.createFactory require './components/view'
 io = require 'socket.io-client'
 socket = io()
 
-jwt = require 'jsonwebtoken'
-
 getTitles = require('./utility').getTitles
 
 Page = React.createClass
@@ -28,13 +26,23 @@ Page = React.createClass
       searchTerm: ''
       notesEntry: ''
       titleEntry: ''
-      userData: {}
+      favorites: []
+      userJWT: null
+      username: null
       view: 'tabview'
     }
 
   componentDidMount: () ->
     getTitles(socket, (titles) => @setState(titles: titles))
     socket.on('tabs changed', => getTitles(socket, (titles) => @setState(titles: titles)))
+    socket.on 'authenticated', (message) =>
+      @setState
+        userJWT: message.token
+        username: message.username
+      socket.emit('get favorites', message.token)
+    socket.on 'here are favorites', (favs) =>
+      @setState(favorites: favs)
+      console.log(favs)
 
   searchUpdated: (e) -> @setState(searchTerm: e.target.value)
 
@@ -52,27 +60,19 @@ Page = React.createClass
 
   setView: (view) -> @setState(view: view)
 
-  withJWT: (socketEvent, payload, onSuccess, onFail) ->
-    socket.emit 'get secret'
-    socket.on 'here is secret', (secret) =>
-      socket.emit socketEvent,
-        jwt.sign payload, secret
-      socket.on('authenticated', onSuccess)
-      socket.on('denied', onFail)
-
   loginUser: (user) ->
-    @withJWT('user login', user,
-      () => @setState(userData: user),
-      (data) -> console.log(data))
+    socket.emit 'user login', user
 
-  logoffUser: -> @setState(userData: {})
+  logoffUser: -> @setState
+    favorites: []
+    username: ''
 
   render: ->
     div
       className: 'page',
       toolbar
         className: 'toolbar'
-        userData: @state.userData
+        username: @state.username
         toCreateUser: => @setView('signupView')
         socket: socket
         loginUser: @loginUser
