@@ -2,6 +2,7 @@
 /*.js
 /bak_node_modules
 /node_modules
-/assets/cs/server.js
 /.emacs.desktop
 /.emacs.desktop.lock
+assets/coffee/*.js
+server.js

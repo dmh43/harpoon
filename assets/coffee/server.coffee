@@ -6,6 +6,11 @@ io = require('socket.io').listen(server)
 path = require 'path'
 mysql = require 'mysql'
 
+jwt = require 'jsonwebtoken'
+bcrypt = require 'bcrypt'
+
+$ = require 'jquery'
+
 dbConn =mysql.createConnection({
   host: 'localhost'
   user: 'dany'
@@ -30,7 +35,22 @@ writeTab = (tab) ->
       if err then throw err
       console.log('Last tab ID:', res.insertId))
 
-io.on('connection', (socket) ->
+secret = "temp-secret"
+
+lookupUser = (username, password, callback) ->
+  dbConn.query('SELECT * FROM users where username=?', username, (err, rows) ->
+    bcrypt.compare(password, rows[0].password, callback))
+
+newUser = (username, password) ->
+  bcrypt.genSalt 10, (err, salt) ->
+    bcrypt.hash password, salt, (err, hash) ->
+      user = {username: username, password: hash}
+      dbConn.query('INSERT IGNORE INTO users SET ?', user,
+        (err, res) ->
+          if err then throw err
+          console.log('Last user ID: ', res.insertId))
+
+io.on 'connection', (socket) ->
   console.log('Connected!')
   socket.on('get tab', (tabTitle) ->
     getTabs((rows) ->
@@ -47,7 +67,15 @@ io.on('connection', (socket) ->
     writeTab(tab)
     io.emit('tabs changed')
     console.log('got a new tab!'))
-  )
+  socket.on 'get secret', () -> socket.emit 'here is secret', secret
+  socket.on 'new user', (user) -> newUser(user.username, user.password)
+  socket.on 'user login', (token) -> jwt.verify token, secret,
+    (err, payload) ->
+      lookupUser(payload.username, payload.password, (err, rows) ->
+        if rows.length != 0
+          socket.emit 'authenticated', "user's data"
+        else
+          socket.emit 'denied', 'no user credentials matched')
 
 app.use(express.static('./'))
 

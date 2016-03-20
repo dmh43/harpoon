@@ -1,10 +1,8 @@
 React = require 'react'
 {Component} = React
-{div, input, button} = React.DOM
+{div, input, button, span} = React.DOM
 
 Form = React.createFactory (require 'react-form-controlled').default
-
-
 
 class Toolbar extends Component
 
@@ -13,17 +11,21 @@ class Toolbar extends Component
       username: '',
       password: ''
 
-  handleFormChange: (state) -> @setState(state)
+  handleFormChange: (state) => @setState(state)
 
-  handleFormSubmit: (state) ->
-    Auth.login(@state.username, @state.password)
-      .catch (err) ->
-        console.log("Error logging in", err)
-    @setState(username: '', password: '')
+  handleFormSubmit: (state) =>
+    user = {username: @state.username, password: @state.password}
+    @setState username: '', password: ''
+    @props.loginUser(user)
 
   render: =>
-    if @props.isLoggedIn
-      return div className: 'toolbar', 'Hello user!'
+    if @props.userData.username
+      return div className: 'toolbar',
+        span className: 'welcome-message',
+          "Welcome, " + @props.userData.username + "!"
+        button
+          onClick: @props.logoffUser
+          'Logoff'
     return div
       className: 'toolbar',
       Form
@@ -42,6 +44,8 @@ class Toolbar extends Component
           type: 'submit'
           'Login'
       div
-        onClick: @props.toCreateUser
+        className: 'signup'
+        onClick: @props.toCreateUser,
+        'Sign-up here!'
 
 module.exports = Toolbar

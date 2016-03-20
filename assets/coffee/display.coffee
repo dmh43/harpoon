@@ -1,15 +1,16 @@
 React = require 'react'
 ReactDOM = require 'react-dom'
 Menu = React.createFactory (require 'react-burger-menu').slide
-tabsection = React.createFactory require './components/tabsection'
 tablist = React.createFactory require './components/tablist'
 toolbar = React.createFactory require './components/toolbar'
-tabinput = React.createFactory require './components/tabinput'
+view = React.createFactory require './components/view'
 
 {div, label, input, button, textarea} = React.DOM
 
 io = require 'socket.io-client'
 socket = io()
+
+jwt = require 'jsonwebtoken'
 
 getTitles = require('./utility').getTitles
 
@@ -27,12 +28,13 @@ Page = React.createClass
       searchTerm: ''
       notesEntry: ''
       titleEntry: ''
-      userData: {isLoggedIn: false}
+      userData: {}
+      view: 'tabview'
     }
 
   componentDidMount: () ->
     getTitles(socket, (titles) => @setState(titles: titles))
-    socket.on('tabs changed', getTitles(socket, (titles) => @setState(titles: titles)))
+    socket.on('tabs changed', => getTitles(socket, (titles) => @setState(titles: titles)))
 
   searchUpdated: (e) -> @setState(searchTerm: e.target.value)
 
@@ -48,12 +50,33 @@ Page = React.createClass
         console.log(tab)
         @setState(tab:tab))
 
+  setView: (view) -> @setState(view: view)
+
+  withJWT: (socketEvent, payload, onSuccess, onFail) ->
+    socket.emit 'get secret'
+    socket.on 'here is secret', (secret) =>
+      socket.emit socketEvent,
+        jwt.sign payload, secret
+      socket.on('authenticated', onSuccess)
+      socket.on('denied', onFail)
+
+  loginUser: (user) ->
+    @withJWT('user login', user,
+      () => @setState(userData: user),
+      (data) -> console.log(data))
+
+  logoffUser: -> @setState(userData: {})
+
   render: ->
     div
       className: 'page',
       toolbar
         className: 'toolbar'
         userData: @state.userData
+        toCreateUser: => @setView('signupView')
+        socket: socket
+        loginUser: @loginUser
+        logoffUser: @logoffUser
       Menu
         className: 'menu',
         ref: (ref) => @Sidebar = ref,
@@ -65,16 +88,14 @@ Page = React.createClass
             titles: @state.titles
             searchTerm: @state.searchTerm
             onTitleClick: @onTitleClick
-      div
+      view
         className: 'view'
-        tabsection
-          className: 'tabSection'
-          tab: @state.tab
-        tabinput
-          className: 'tabInput'
-          socket: socket
-          setTab: @setTab
-          setTitles: @setTitles
+        view: @state.view
+        socket: socket
+        tab : @state.tab
+        setTab: @setTab
+        setTitles: @setTitles
+        loginUser: @loginUser
 
 ReactDOM.render(React.createElement(Page),
   document.getElementById('content'))
