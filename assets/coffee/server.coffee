@@ -30,6 +30,7 @@ getTabs = (operation) ->
     operation(rows))
 
 writeTab = (tab) ->
+  tab['num_fav'] = 0
   dbConn.query('INSERT INTO tabs SET ?', tab,
     (err, res) ->
       if err then throw err
@@ -65,7 +66,7 @@ io.on 'connection', (socket) ->
       getTabs((rows) ->
         console.log(rows)
         socket.emit('here are titles',
-          (tab.title for tab in rows))))
+          ({title: tab.title, numFav: tab.num_fav} for tab in rows))))
   socket.on('tab submission', (tab) ->
     writeTab(tab)
     io.emit('tabs changed')
@@ -81,7 +82,7 @@ io.on 'connection', (socket) ->
   socket.on 'get favorites', (token) -> jwt.verify token, secret,
     (err, payload) -> dbConn.query 'SELECT favorites FROM users where username=?',
       payload.username, (err, rows) ->
-        socket.emit 'here are favorites', rows[0].favorites
+        socket.emit 'here are favorites', [rows[0].favorites.slice(2,-2)]
         console.log(rows)
         console.log(err)
 

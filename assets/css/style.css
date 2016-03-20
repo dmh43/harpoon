@@ -281,6 +281,7 @@ li {
   display: block;
   width: 200px;
   padding: 10px;
+  margin-left: 30px;
   -webkit-transition: font-weight 0.1s ease, background-color 0.3s ease, padding-top 0.3s ease, padding-botton 0.3s ease;
   -moz-transition: font-weight 0.1s ease, background-color 0.3s ease, padding-top 0.3s ease, padding-botton 0.3s ease;
   -o-transition: font-weight 0.1s ease, background-color 0.3s ease, padding-top 0.3s ease, padding-botton 0.3s ease;
@@ -294,4 +295,36 @@ li:hover {
   /* font-weight: bold; */
   /* padding-top: 15px; */
   /* padding-bottom: 15px; */
+}
+
+.title-holder {
+  display: inline-block;
+  padding-bottom: 10px;
+}
+
+.fav-container {
+  width: 30px;
+  float: left;
+  filter: grayscale(100%);
+  -webkit-filter: grayscale(100%);
+}
+
+.fav-container:hover {
+  filter: grayscale(50%);
+  -webkit-filter: grayscale(50%);
+}
+
+.fav-container:active {
+  filter: grayscale(10%);
+  -webkit-filter: grayscale(10%);
+}
+
+.fav-icon {
+  width: inherit;
+}
+
+.fav-count {
+  font-size: 10px;
+  text-align: center;
+  line-height: 0.5;
 }

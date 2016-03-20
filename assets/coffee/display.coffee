@@ -22,11 +22,11 @@ Page = React.createClass
       tab:
         title:'No Tab Selected'
         notes: 'Select a tab from the side bar to the left'
-      titles: ['DEAD', 'BEEF']
+      titles: [{title: 'DEAD', numFav: 0}, {title: 'BEEF', numFav: 0}]
       searchTerm: ''
       notesEntry: ''
       titleEntry: ''
-      favorites: []
+      userFavs: []
       userJWT: null
       username: null
       view: 'tabview'
@@ -41,7 +41,7 @@ Page = React.createClass
         username: message.username
       socket.emit('get favorites', message.token)
     socket.on 'here are favorites', (favs) =>
-      @setState(favorites: favs)
+      @setState(userFavs: favs)
       console.log(favs)
 
   searchUpdated: (e) -> @setState(searchTerm: e.target.value)
@@ -64,7 +64,7 @@ Page = React.createClass
     socket.emit 'user login', user
 
   logoffUser: -> @setState
-    favorites: []
+    userFavs: []
     username: ''
 
   render: ->
@@ -88,6 +88,7 @@ Page = React.createClass
             titles: @state.titles
             searchTerm: @state.searchTerm
             onTitleClick: @onTitleClick
+            userFavs: @state.userFavs
       view
         className: 'view'
         view: @state.view
