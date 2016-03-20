@@ -10,7 +10,7 @@ view = React.createFactory require './components/view'
 io = require 'socket.io-client'
 socket = io()
 
-getTitles = require('./utility').getTitles
+getSongs = require('./utility').getSongs
 
 Page = React.createClass
   displayName: 'Page'
@@ -22,7 +22,7 @@ Page = React.createClass
       tab:
         title:'No Tab Selected'
         notes: 'Select a tab from the side bar to the left'
-      titles: [{title: 'DEAD', numFav: 0}, {title: 'BEEF', numFav: 0}]
+      songs: [{title: 'DEAD', numFav: 0, id:0}, {title: 'BEEF', numFav: 0, id:1}]
       searchTerm: ''
       notesEntry: ''
       titleEntry: ''
@@ -33,8 +33,8 @@ Page = React.createClass
     }
 
   componentDidMount: () ->
-    getTitles(socket, (titles) => @setState(titles: titles))
-    socket.on('tabs changed', => getTitles(socket, (titles) => @setState(titles: titles)))
+    getSongs(socket, (songs) => @setState(songs: songs))
+    socket.on('tabs changed', => getSongs(socket, (songs) => @setState(songs: songs)))
     socket.on 'authenticated', (message) =>
       @setState
         userJWT: message.token
@@ -48,12 +48,12 @@ Page = React.createClass
 
   setTab: (tab) -> @setState(tab: tab)
 
-  setTitles: (titles) -> @setState(titles: titles)
+  setSongs: (songs) -> @setState(songs: songs)
 
-  onTitleClick: (title) ->
+  onTitleClick: (id) ->
     return =>
       @Sidebar.setState(isOpen: false)
-      socket.emit('get tab', title)
+      socket.emit('get tab', id)
       socket.on('here is tab', (tab) =>
         console.log(tab)
         @setState(tab:tab))
@@ -74,7 +74,6 @@ Page = React.createClass
         className: 'toolbar'
         username: @state.username
         toCreateUser: => @setView('signupView')
-        socket: socket
         loginUser: @loginUser
         logoffUser: @logoffUser
       Menu
@@ -85,7 +84,7 @@ Page = React.createClass
             className: 'search-input'
             onChange: @searchUpdated
           tablist
-            titles: @state.titles
+            songs: @state.songs
             searchTerm: @state.searchTerm
             onTitleClick: @onTitleClick
             userFavs: @state.userFavs
@@ -95,7 +94,7 @@ Page = React.createClass
         socket: socket
         tab : @state.tab
         setTab: @setTab
-        setTitles: @setTitles
+        setSongs: @setSongs
         loginUser: @loginUser
 
 ReactDOM.render(React.createElement(Page),

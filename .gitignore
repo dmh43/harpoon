@@ -6,3 +6,4 @@
 /.emacs.desktop.lock
 assets/coffee/*.js
 server.js
+utility.js

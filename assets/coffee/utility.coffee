@@ -1,6 +1,6 @@
-getTitles =
+getSongs =
   (socket, callback) =>
     socket.emit 'get tab names'
-    socket.on 'here are titles', callback
+    socket.on 'here are songs', callback
 
-exports.getTitles = getTitles
+exports.getSongs = getSongs

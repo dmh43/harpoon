@@ -30,7 +30,7 @@ getTabs = (operation) ->
     operation(rows))
 
 writeTab = (tab) ->
-  tab['num_fav'] = 0
+  tab['numFav'] = 0
   dbConn.query('INSERT INTO tabs SET ?', tab,
     (err, res) ->
       if err then throw err
@@ -56,17 +56,16 @@ buildJWT = (username) ->
 
 io.on 'connection', (socket) ->
   console.log('Connected!')
-  socket.on('get tab', (tabTitle) ->
+  socket.on('get tab', (tabID) ->
     getTabs((rows) ->
       socket.emit('here is tab',
-        (tab for tab in rows when tab.title == tabTitle)[0])
+        (tab for tab in rows when tab.id == tabID)[0])
       console.log('sent a tab')))
   socket.on('get tab names', () ->
-      console.log('sending titles')
+      console.log('sending songs')
       getTabs((rows) ->
         console.log(rows)
-        socket.emit('here are titles',
-          ({title: tab.title, numFav: tab.num_fav} for tab in rows))))
+        socket.emit('here are songs', rows)))
   socket.on('tab submission', (tab) ->
     writeTab(tab)
     io.emit('tabs changed')
@@ -82,7 +81,7 @@ io.on 'connection', (socket) ->
   socket.on 'get favorites', (token) -> jwt.verify token, secret,
     (err, payload) -> dbConn.query 'SELECT favorites FROM users where username=?',
       payload.username, (err, rows) ->
-        socket.emit 'here are favorites', [rows[0].favorites.slice(2,-2)]
+        socket.emit 'here are favorites', JSON.parse rows[0].favorites
         console.log(rows)
         console.log(err)
 
