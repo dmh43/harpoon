@@ -76,9 +76,9 @@ Page = React.createClass
       @Sidebar.setState(isOpen: false)
       socket.emit('get tab', id)
 
-  toggleFav: (id, jwt) ->
+  toggleFav: (id) ->
     return =>
-      if jwt
+      if @state.userJWT
         socket.emit('toggle fav', {id:id, jwt: @state.userJWT})
 
   setView: (view) -> @setState(view: view)
@@ -116,7 +116,6 @@ Page = React.createClass
             onTitleClick: @onTitleClick
             onFav: @toggleFav
             userFavs: @state.userFavs
-            jwt: @state.username
       view
         className: 'view'
         view: @state.view

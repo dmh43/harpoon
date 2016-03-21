@@ -13,7 +13,7 @@ class TabList extends Component
         title: song.title
         numFav: song.numFav
         key: song.id
-        onFav: @props.onFav(song.id, @props.jwt)
+        onFav: @props.onFav(song.id)
         onItemClick: @props.onTitleClick(song.id)
         isUserFav: @props.userFavs.includes(song.id)
     return div className: "tabList",
