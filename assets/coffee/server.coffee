@@ -42,7 +42,7 @@ lookupUser = (username, password, callback) ->
 newUser = (username, password) ->
   bcrypt.genSalt 10, (err, salt) ->
     bcrypt.hash password, salt, (err, hash) ->
-      user = {username: username, password: hash}
+      user = {username: username, password: hash, favorites: '[]'}
       dbConn.query 'INSERT IGNORE INTO users SET ?', user,
         (err, res) ->
           if err then throw err
