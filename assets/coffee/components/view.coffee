@@ -27,7 +27,6 @@ class View extends Component
       usernameEntry: ''
       passwordEntry: ''
       passwordConfirmationEntry: ''
-    #@props.loginUser(user)
 
   tabview: ->
     return div className: 'tabView',

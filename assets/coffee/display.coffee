@@ -65,6 +65,8 @@ Page = React.createClass
           else
             {title: song.title, numFav: data.numFav, id: data.id})
 
+    # socket.on 'user created'
+
   searchUpdated: (e) -> @setState(searchTerm: e.target.value)
 
   setTab: (tab) -> @setState(tab: tab)

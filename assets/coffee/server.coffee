@@ -39,13 +39,14 @@ lookupUser = (username, password, callback) ->
   dbConn.query('SELECT * FROM users where username=?', username, (err, rows) ->
     bcrypt.compare(password, rows[0].password, callback))
 
-newUser = (username, password) ->
+newUser = (username, password, callback) ->
   bcrypt.genSalt 10, (err, salt) ->
     bcrypt.hash password, salt, (err, hash) ->
       user = {username: username, password: hash, favorites: '[]'}
       dbConn.query 'INSERT IGNORE INTO users SET ?', user,
         (err, res) ->
           if err then throw err
+          callback()
 
 buildJWT = (username) ->
   jwt.sign {username: username}, secret
@@ -92,7 +93,8 @@ io.on 'connection', (socket) ->
     writeTab(tab)
     io.emit('tabs changed')
 
-  socket.on 'new user', (user) -> newUser(user.username, user.password)
+  socket.on 'new user', (user) ->
+    newUser(user.username, user.password, () -> socket.emit 'user created')
 
   socket.on 'user login', (user) ->
     lookupUser(user.username, user.password, (err, rows) ->
