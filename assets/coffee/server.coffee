@@ -61,6 +61,29 @@ io.on 'connection', (socket) ->
       socket.emit('here is tab',
         (tab for tab in rows when tab.id == tabID)[0])
       console.log('sent a tab')))
+  socket.on 'toggle fav', (data) ->
+    jwt.verify data.jwt, secret, (err, payload) ->
+      username = payload.username
+      tabID = data.id
+      dbConn.query 'SELECT favorites FROM users where username=?', username,
+        (err, rows) ->
+          favs = JSON.parse(rows[0].favorites)
+          dbConn.query 'SELECT numFav FROM tabs where id=?', tabID,
+            ((favs) ->
+              return (err, rows_id) ->
+                numFav = parseInt rows_id[0].numFav
+                if tabID in favs
+                  numFav = numFav+1
+                else
+                  numFav = numFav-1
+                dbConn.query('UPDATE tabs SET numFav=? where id=?', [numFav, tabID]))(favs)
+          if tabID in favs
+            favs.splice(favs.indexOf(tabID), 1)
+          else
+            favs.push(tabID)
+          dbConn.query('UPDATE users SET favorites=JSON_ARRAY(?) where username=?', [favs, username])
+          io.emit('favs changed')
+          io.emit('numFav changed', tabID)
   socket.on('get tab names', () ->
       console.log('sending songs')
       getTabs((rows) ->
@@ -84,6 +107,9 @@ io.on 'connection', (socket) ->
         socket.emit 'here are favorites', JSON.parse rows[0].favorites
         console.log(rows)
         console.log(err)
+  socket.on 'get numFav', (tabID) ->
+    dbConn.query 'SELECT numFav FROM tabs where id=?', tabID, (err, rows) ->
+      socket.emit 'here is numFav', {id: tabID, numFav: parseInt rows[0].numFav}
 
 app.use(express.static('./'))
 

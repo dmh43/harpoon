@@ -15,6 +15,7 @@ class TabListItem extends Component
       div
         className: "fav-container"
         style: coloredStyle(@props.isUserFav)
+        onClick: @props.onFav
         img
           className: "fav-icon"
           src: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Emblem-favorites.svg/48px-Emblem-favorites.svg.png"

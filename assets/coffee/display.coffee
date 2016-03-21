@@ -34,7 +34,8 @@ Page = React.createClass
 
   componentDidMount: () ->
     getSongs(socket, (songs) => @setState(songs: songs))
-    socket.on('tabs changed', => getSongs(socket, (songs) => @setState(songs: songs)))
+    socket.on('tabs changed', =>
+      getSongs(socket, (songs) => @setState(songs: songs)))
     socket.on 'authenticated', (message) =>
       @setState
         userJWT: message.token
@@ -43,6 +44,16 @@ Page = React.createClass
     socket.on 'here are favorites', (favs) =>
       @setState(userFavs: favs)
       console.log(favs)
+    socket.on 'favs changed', => socket.emit 'get favorites', @state.userJWT
+    socket.on 'numFav changed', (tabID) =>
+      socket.emit 'get numFav', tabID
+    socket.on 'here is numFav', (data) =>
+      @setState(songs:
+        for song in @state.songs
+          if song.id != data.id
+            song
+          else
+            {title: song.title, numFav: data.numFav, id: data.id})
 
   searchUpdated: (e) -> @setState(searchTerm: e.target.value)
 
@@ -57,6 +68,12 @@ Page = React.createClass
       socket.on('here is tab', (tab) =>
         console.log(tab)
         @setState(tab:tab))
+
+  toggleFav: (id, jwt) ->
+    return =>
+      if jwt
+        socket.emit('toggle fav', {id:id, jwt: @state.userJWT})
+        console.log('toggled fav' + id)
 
   setView: (view) -> @setState(view: view)
 
@@ -87,7 +104,9 @@ Page = React.createClass
             songs: @state.songs
             searchTerm: @state.searchTerm
             onTitleClick: @onTitleClick
+            onFav: @toggleFav
             userFavs: @state.userFavs
+            jwt: @state.username
       view
         className: 'view'
         view: @state.view
