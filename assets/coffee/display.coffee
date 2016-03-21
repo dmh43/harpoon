@@ -27,26 +27,36 @@ Page = React.createClass
       notesEntry: ''
       titleEntry: ''
       userFavs: []
-      userJWT: null
-      username: null
+      userJWT: localStorage.userJWT
+      username: localStorage.username
       view: 'tabview'
     }
 
   componentDidMount: () ->
     getSongs(socket, (songs) => @setState(songs: songs))
+
+    socket.on('here is tab', (tab) =>
+      @setState(tab:tab))
+
     socket.on('tabs changed', =>
       getSongs(socket, (songs) => @setState(songs: songs)))
+
     socket.on 'authenticated', (message) =>
       @setState
         userJWT: message.token
         username: message.username
+      localStorage.setItem('userJWT', message.token)
+      localStorage.setItem('username', message.username)
       socket.emit('get favorites', message.token)
+
     socket.on 'here are favorites', (favs) =>
       @setState(userFavs: favs)
-      console.log(favs)
+
     socket.on 'favs changed', => socket.emit 'get favorites', @state.userJWT
+
     socket.on 'numFav changed', (tabID) =>
       socket.emit 'get numFav', tabID
+
     socket.on 'here is numFav', (data) =>
       @setState(songs:
         for song in @state.songs
@@ -65,24 +75,24 @@ Page = React.createClass
     return =>
       @Sidebar.setState(isOpen: false)
       socket.emit('get tab', id)
-      socket.on('here is tab', (tab) =>
-        console.log(tab)
-        @setState(tab:tab))
 
   toggleFav: (id, jwt) ->
     return =>
       if jwt
         socket.emit('toggle fav', {id:id, jwt: @state.userJWT})
-        console.log('toggled fav' + id)
 
   setView: (view) -> @setState(view: view)
 
   loginUser: (user) ->
     socket.emit 'user login', user
 
-  logoffUser: -> @setState
-    userFavs: []
-    username: ''
+  logoffUser: ->
+    localStorage.removeItem 'userJWT'
+    localStorage.removeItem 'username'
+    @setState
+      userFavs: []
+      username: ''
+      userJWT: {}
 
   render: ->
     div

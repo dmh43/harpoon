@@ -19,7 +19,6 @@ class TabInput extends Component
     tab =
       title: state.titleEntry
       notes: state.notesEntry
-    console.log tab
     @props.socket.emit 'tab submission', tab
     @setState
       titleEntry: ''
