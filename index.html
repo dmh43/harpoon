@@ -3,26 +3,10 @@
 <head>
   <meta charset='UTF-8'>
   <title>Harpoon</title>
-  <link rel='stylesheet' href='./assets/css/style.css'>
+  <link rel='stylesheet' href='./src/css/style.css'>
 </head>
 <body>
   <div id='content'></div>
   <script src='./bundle.js'></script>
-  <!--
-  <script>
-    $(function() {
-      var socket = io();
-      var containerEl = $('.visits');
-
-      socket.on('visit', function(visit) {
-        var newItem = '<div class='visit'>';
-        newItem += '<span class='date'>' + moment().format('MMMM Do YYYY, HH:mm:ss') + '</span>';
-        newItem += '<span class='ip'>' + visit.ip + '</span>';
-        newItem += '<span class='ua'>' + visit.ua + '</span></div>';
-        containerEl.append(newItem);
-      });
-    });
-  </script>
-  -->
 </body>
 </html>
