@@ -1,17 +1,10 @@
 express = require 'express'
-fs = require 'fs'
 app = express()
 server = app.listen(3000)
 io = require('socket.io').listen(server)
-path = require 'path'
 mysql = require 'mysql'
 
-jwt = require 'jsonwebtoken'
-bcrypt = require 'bcrypt'
-
-$ = require 'jquery'
-
-dbConn =mysql.createConnection({
+dbConn = mysql.createConnection({
   host: 'localhost'
   user: 'dany'
   password: '7pqe5fa1'
@@ -23,57 +16,8 @@ dbConn.connect((err) ->
   else
     console.log('DB connected!'))
 
-getTabs = (operation) ->
-  dbConn.query('SELECT * FROM tabs', (err, rows) ->
-    if err then throw err
-    operation(rows))
-
-writeTab = (tab) ->
-  tab['numFav'] = 0
-  dbConn.query 'INSERT INTO tabs SET ?', tab,
-    (err, res) -> if err then throw err
-
-secret = "temp-secret"
-
-lookupUser = (username, password, callback) ->
-  dbConn.query('SELECT * FROM users where username=?', username, (err, rows) ->
-    if err or rows.length == 0
-      callback false
-    else
-      bcrypt.compare(password, rows[0].password, callback))
-
-newUser = (username, password, callback) ->
-  bcrypt.genSalt 10, (err, salt) ->
-    bcrypt.hash password, salt, (err, hash) ->
-      user = {username: username, password: hash, favorites: '[]'}
-      dbConn.query 'INSERT INTO users SET ?', user,
-        (err, res) ->
-          if err then callback 'user creation failed'
-          callback 'user created'
-
-buildJWT = (username) ->
-  jwt.sign {username: username}, secret
-
-toggleFav = (username, tabID) ->
-  dbConn.query 'SELECT favorites FROM users where username=?', username,
-    (err, rows) ->
-      favs = JSON.parse(rows[0].favorites)
-      dbConn.query 'SELECT numFav FROM tabs where id=?', tabID,
-        ((favs) ->
-          return (err, rows_id) ->
-            numFav = parseInt rows_id[0].numFav
-            if tabID in favs
-              numFav = numFav+1
-            else
-              numFav = numFav-1
-            dbConn.query('UPDATE tabs SET numFav=? where id=?', [numFav, tabID]))(favs)
-      if tabID in favs
-        favs.splice(favs.indexOf(tabID), 1)
-      else
-        favs.push(tabID)
-      dbConn.query('UPDATE users SET favorites=JSON_ARRAY(?) where username=?', [favs, username])
-      io.emit('favs changed')
-      io.emit('numFav changed', tabID)
+{getTabs, writeTab} = require('./server/tabInterface') dbConn
+{lookupUser, newUser, buildJWT, toggleFav} = require('./server/users') dbConn
 
 io.on 'connection', (socket) ->
 
@@ -118,7 +62,3 @@ io.on 'connection', (socket) ->
           {id: tabID, numFav: parseInt rows[0].numFav}
 
 app.use express.static('./')
-
-root = exports ? this
-root.getTabs = getTabs
-root.writeTab = writeTab
